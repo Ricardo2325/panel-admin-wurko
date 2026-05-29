@@ -24,14 +24,14 @@ const navByRole: Record<UserRole, NavItem[]> = {
   jefe: [
     { to: '/dashboard', label: 'Inicio' },
     { to: '/dashboard/pedidos', label: 'Pedidos' },
+    { to: '/dashboard/carta', label: 'Carta de productos' },
+    { to: '/dashboard/importar', label: 'Importar carta XLS' },
   ],
   staff: [
-    { to: '/dashboard/carta', label: 'Carta de productos' },
-    { to: '/dashboard/menu-dia', label: 'Menú del día' },
-    { to: '/dashboard/agotados', label: 'Productos agotados' },
-    { to: '/dashboard/bloqueados', label: 'Números bloqueados' },
-    { to: '/dashboard/admins', label: 'Números admin' },
     { to: '/dashboard/pedidos', label: 'Pedidos' },
+    { to: '/dashboard/bloqueados', label: 'Números bloqueados' },
+    { to: '/dashboard/agotados', label: 'Productos agotados' },
+    { to: '/dashboard/menu-dia', label: 'Menú del día' },
   ],
 }
 
