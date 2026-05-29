@@ -5,9 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { supabase } from '../lib/supabase'
 
+const DOMAIN = '@wurko.local'
+
 const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(8, 'Mínimo 8 caracteres'),
+  usuario: z.string().min(1, 'Introduce tu usuario').regex(/^[a-zA-Z0-9_]+$/, 'Solo letras, números y guión bajo'),
+  password: z.string().min(1, 'Introduce tu contraseña'),
 })
 
 type LoginForm = z.infer<typeof loginSchema>
@@ -17,26 +19,23 @@ export default function Login() {
   const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) })
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  })
 
   async function onSubmit(data: LoginForm) {
     setServerError(null)
     setLoading(true)
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
+      email: data.usuario.toLowerCase().trim() + DOMAIN,
       password: data.password,
     })
 
     setLoading(false)
 
     if (error) {
-      // Mensaje genérico — no revelar si el email existe o no
-      setServerError('Credenciales incorrectas. Verificá email y contraseña.')
+      setServerError('Usuario o contraseña incorrectos.')
     } else {
       navigate('/dashboard')
     }
@@ -52,24 +51,22 @@ export default function Login() {
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
             <input
-              type="email"
-              autoComplete="email"
+              type="text"
+              autoComplete="username"
+              autoCapitalize="none"
+              placeholder="jefe, empleado, tecnico..."
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-              {...register('email')}
+              {...register('usuario')}
             />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+            {errors.usuario && (
+              <p className="text-red-500 text-xs mt-1">{errors.usuario.message}</p>
             )}
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Contraseña
-            </label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
             <input
               type="password"
               autoComplete="current-password"
