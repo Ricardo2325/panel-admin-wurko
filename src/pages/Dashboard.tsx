@@ -304,11 +304,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {noPedidos && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6">
-          <p className="text-amber-700 text-sm">No hay pedidos en los últimos {period} días. Prueba seleccionar un período mayor.</p>
-        </div>
-      )}
       <>
 
           {/* Facturación diaria */}
