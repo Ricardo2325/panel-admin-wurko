@@ -1,0 +1,18 @@
+services:
+  panel-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    restart: unless-stopped
+    # Expone en puerto interno 3010; Nginx/Traefik del VPS hace el proxy
+    ports:
+      - "127.0.0.1:3010:80"
+    labels:
+      # Si usás Traefik, descomentá y ajustá el host
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.panel.rule=Host(`admin.baifostudio.com`)"
+      # - "traefik.http.routers.panel.entrypoints=websecure"
+      # - "traefik.http.routers.panel.tls.certresolver=letsencrypt"
