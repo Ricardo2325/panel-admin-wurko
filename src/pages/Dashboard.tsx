@@ -304,12 +304,13 @@ export default function Dashboard() {
         </div>
       )}
 
-      {noPedidos ? (
-        <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
-          <p className="text-slate-400">No hay pedidos en los últimos {period} días</p>
+      {noPedidos && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6">
+          <p className="text-amber-700 text-sm">No hay pedidos en los últimos {period} días. Prueba seleccionar un período mayor.</p>
         </div>
-      ) : (
-        <>
+      )}
+      <>
+
           {/* Facturación diaria */}
           <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
             <h2 className="text-sm font-semibold text-slate-800 mb-4">Facturación diaria</h2>
@@ -463,8 +464,7 @@ export default function Dashboard() {
               <HBarChart data={topZonas} dataKey="Pedidos" color="#06b6d4" />
             </div>
           )}
-        </>
-      )}
+      </>
     </div>
   )
 }
