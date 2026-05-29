@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabase'
 import type { MenuDia as MenuDiaType } from '../types/database'
 
 // Tipos del menú que vamos a gestionar
-const MENU_TIPOS = ['Primero', 'Segundo', 'Postre', 'Bebida', 'Precio']
+const MENU_TIPOS = ['Primero', 'Segundo', 'Postre', 'Bebida']
 
 async function fetchMenu(): Promise<MenuDiaType[]> {
   const { data, error } = await supabase
@@ -23,7 +23,6 @@ const menuSchema = z.object({
   Segundo: z.string().max(200).optional(),
   Postre: z.string().max(200).optional(),
   Bebida: z.string().max(200).optional(),
-  Precio: z.string().max(50).optional(),
 })
 
 type MenuForm = z.infer<typeof menuSchema>
@@ -95,7 +94,7 @@ export default function MenuDia() {
               <input
                 type="text"
                 maxLength={200}
-                placeholder={tipo === 'Precio' ? 'Ej: 10€' : `Ej: Ensalada mixta`}
+                placeholder="Ej: Ensalada mixta"
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                 {...register(tipo as keyof MenuForm)}
               />

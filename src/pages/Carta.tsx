@@ -136,7 +136,7 @@ export default function Carta() {
         </span>
       </div>
       <p className="text-slate-500 text-sm mb-5">
-        Hacé clic en el precio para editarlo. Usá el toggle para activar/desactivar un producto.
+        Haz clic en el precio para editarlo. Usa el toggle para activar/desactivar un producto.
       </p>
 
       {/* Filtros */}

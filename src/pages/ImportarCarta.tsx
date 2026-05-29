@@ -174,7 +174,7 @@ export default function ImportarCarta() {
       >
         <div className="text-3xl mb-3">📂</div>
         <p className="text-slate-700 font-medium text-sm">
-          {dragging ? 'Soltá el archivo aquí' : 'Arrastrá el XLS aquí o hacé clic para elegirlo'}
+          {dragging ? 'Suelta el archivo aquí' : 'Arrastra el XLS aquí o haz clic para elegirlo'}
         </p>
         <p className="text-slate-400 text-xs mt-1">Acepta .xls y .xlsx</p>
         <input
