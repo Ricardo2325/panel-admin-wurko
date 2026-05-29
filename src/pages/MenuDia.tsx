@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import type { MenuDia as MenuDiaType } from '../types/database'
 
-const CURSOS = ['Primero', 'Segundo', 'Postre'] as const
+const CURSOS = ['Primero', 'Segundo', 'Postre', 'Bebida'] as const
 type Curso = typeof CURSOS[number]
 const MENU_TIPOS = ['Primero', 'Segundo', 'Postre', 'Bebida']
 const SEP = ' | '
@@ -29,8 +29,8 @@ export default function MenuDia() {
     Primero: [''],
     Segundo: [''],
     Postre: [''],
+    Bebida: [''],
   })
-  const [bebida, setBebida] = useState('')
   const [saved, setSaved] = useState(false)
   const queryClient = useQueryClient()
 
@@ -42,9 +42,7 @@ export default function MenuDia() {
   useEffect(() => {
     if (menuItems.length === 0) return
     for (const item of menuItems) {
-      if (item.tipo === 'Bebida') {
-        setBebida(item.descripcion)
-      } else if (CURSOS.includes(item.tipo as Curso)) {
+      if (CURSOS.includes(item.tipo as Curso)) {
         const parts = item.descripcion ? item.descripcion.split(SEP) : ['']
         setOpciones(prev => ({ ...prev, [item.tipo]: parts.length > 0 ? parts : [''] }))
       }
@@ -53,12 +51,10 @@ export default function MenuDia() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const ops = CURSOS.map((curso) => {
+      await Promise.all(CURSOS.map((curso) => {
         const validos = opciones[curso].map(v => v.trim()).filter(Boolean)
         return upsertMenuTipo(curso, validos.join(SEP))
-      })
-      ops.push(upsertMenuTipo('Bebida', bebida.trim()))
-      await Promise.all(ops)
+      }))
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['menu_dia'] })
@@ -135,18 +131,6 @@ export default function MenuDia() {
               </button>
             </div>
           ))}
-
-          <div>
-            <p className="text-sm font-semibold text-slate-700 mb-2">Bebida</p>
-            <input
-              type="text"
-              maxLength={200}
-              value={bebida}
-              onChange={(e) => setBebida(e.target.value)}
-              placeholder="Ej: Cualquier bebida del menú"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
-            />
-          </div>
 
           <div className="flex items-center gap-3 pt-1">
             <button
