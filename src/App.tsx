@@ -13,6 +13,7 @@ const Bloqueados = lazy(() => import('./pages/Bloqueados'))
 const AdminsNumeros = lazy(() => import('./pages/AdminsNumeros'))
 const Pedidos = lazy(() => import('./pages/Pedidos'))
 const ImportarCarta = lazy(() => import('./pages/ImportarCarta'))
+const KdsAnalytica = lazy(() => import('./pages/KdsAnalytica'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="admins" element={<Suspense fallback={<PageLoader />}><AdminsNumeros /></Suspense>} />
             <Route path="pedidos" element={<Suspense fallback={<PageLoader />}><Pedidos /></Suspense>} />
             <Route path="importar" element={<Suspense fallback={<PageLoader />}><ImportarCarta /></Suspense>} />
+            <Route path="kds" element={<Suspense fallback={<PageLoader />}><KdsAnalytica /></Suspense>} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

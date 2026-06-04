@@ -56,6 +56,25 @@ export interface Pedido {
   created_at: string
 }
 
+export interface KdsTiempo {
+  id: number
+  pedido_id: number
+  pantalla: 'cocina' | 'barra'
+  iniciado_at: string
+  listo_at: string | null
+  tiempo_segundos: number | null
+  created_at: string
+}
+
+export interface ProductoPedido {
+  id: number
+  pedido_id: number
+  nombre: string
+  cantidad: number
+  precio_unitario: number | null
+  modificaciones: string | null
+}
+
 // Supabase GenericSchema requiere Tables, Views, Functions, Enums, CompositeTypes
 // y cada tabla requiere Relationships: [] para que los generics resuelvan
 export interface Database {
