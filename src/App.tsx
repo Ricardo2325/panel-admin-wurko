@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { lazy, Suspense } from 'react'
 import AuthGuard from './components/AuthGuard'
+import RoleGuard from './components/RoleGuard'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -43,7 +44,11 @@ export default function App() {
               </AuthGuard>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route index element={
+              <RoleGuard allowed={['dev', 'jefe']} redirectTo="/dashboard/pedidos">
+                <Dashboard />
+              </RoleGuard>
+            } />
             <Route path="carta" element={<Suspense fallback={<PageLoader />}><Carta /></Suspense>} />
             <Route path="menu-dia" element={<Suspense fallback={<PageLoader />}><MenuDia /></Suspense>} />
             <Route path="agotados" element={<Suspense fallback={<PageLoader />}><Agotados /></Suspense>} />
@@ -51,7 +56,11 @@ export default function App() {
             <Route path="admins" element={<Suspense fallback={<PageLoader />}><AdminsNumeros /></Suspense>} />
             <Route path="pedidos" element={<Suspense fallback={<PageLoader />}><Pedidos /></Suspense>} />
             <Route path="importar" element={<Suspense fallback={<PageLoader />}><ImportarCarta /></Suspense>} />
-            <Route path="kds" element={<Suspense fallback={<PageLoader />}><KdsAnalytica /></Suspense>} />
+            <Route path="kds" element={
+              <RoleGuard allowed={['dev', 'jefe']} redirectTo="/dashboard/pedidos">
+                <Suspense fallback={<PageLoader />}><KdsAnalytica /></Suspense>
+              </RoleGuard>
+            } />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
