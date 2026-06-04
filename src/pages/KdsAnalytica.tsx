@@ -189,8 +189,6 @@ export default function KdsAnalytica() {
     )
   }
 
-  const sinDatos = tiempos.length === 0
-
   return (
     <div>
       {/* Header */}
@@ -245,200 +243,187 @@ export default function KdsAnalytica() {
       </div>
 
       {/* Mini-stats: más rápido / más lento hoy */}
-      {hoy.length > 0 && (
-        <div className="flex gap-3 mb-6">
-          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-            <span className="text-xs text-slate-500">Más rápido hoy</span>
-            <span className="text-sm font-bold text-emerald-600">
-              {masRapidoHoy !== null ? formatTiempo(masRapidoHoy) : '—'}
-            </span>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-            <span className="text-xs text-slate-500">Más lento hoy</span>
-            <span className={`text-sm font-bold ${
-              masLentoHoy !== null && masLentoHoy > 900 ? 'text-red-500' : 'text-slate-800'
-            }`}>
-              {masLentoHoy !== null ? formatTiempo(masLentoHoy) : '—'}
-            </span>
-          </div>
-          {hoyCocina.length > 0 && (
-            <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-              <span className="text-xs text-slate-500">Media cocina hoy</span>
-              <span className="text-sm font-bold text-slate-800">
-                {formatTiempo(mean(hoyCocina.map((t) => t.tiempo_segundos)))}
-              </span>
-            </div>
-          )}
-          {hoyBarra.length > 0 && (
-            <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-              <span className="text-xs text-slate-500">Media barra hoy</span>
-              <span className="text-sm font-bold text-slate-800">
-                {formatTiempo(mean(hoyBarra.map((t) => t.tiempo_segundos)))}
-              </span>
-            </div>
-          )}
+      <div className="flex gap-3 mb-6">
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+          <span className="text-xs text-slate-500">Más rápido hoy</span>
+          <span className="text-sm font-bold text-emerald-600">
+            {masRapidoHoy !== null ? formatTiempo(masRapidoHoy) : '—'}
+          </span>
         </div>
-      )}
-
-      {sinDatos ? (
-        <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
-          <p className="text-slate-400 text-sm">Sin datos KDS para el período seleccionado</p>
-          <p className="text-slate-300 text-xs mt-1">
-            Los datos aparecerán cuando las tablets KDS registren tiempos
-          </p>
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+          <span className="text-xs text-slate-500">Más lento hoy</span>
+          <span className={`text-sm font-bold ${
+            masLentoHoy !== null && masLentoHoy > 900 ? 'text-red-500' : 'text-slate-800'
+          }`}>
+            {masLentoHoy !== null ? formatTiempo(masLentoHoy) : '—'}
+          </span>
         </div>
-      ) : (
-        <>
-          {/* Tiempo medio por hora del día */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
-            <h2 className="text-sm font-semibold text-slate-800 mb-1">
-              Tiempo medio por hora del día
-            </h2>
-            <p className="text-xs text-slate-400 mb-4">Detecta colapsos de cocina por franja horaria</p>
-            {hourData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={hourData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis
-                    dataKey="hora"
-                    tick={{ fontSize: 11, fill: '#94a3b8' }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 11, fill: '#94a3b8' }}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(v: number) => formatTiempo(v)}
-                    width={52}
-                  />
-                  <Tooltip content={<TimeTooltip />} />
-                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                  <Line
-                    type="monotone"
-                    dataKey="Cocina"
-                    stroke={COLOR_COCINA}
-                    strokeWidth={2}
-                    dot={false}
-                    activeDot={{ r: 4, fill: COLOR_COCINA, strokeWidth: 0 }}
-                    connectNulls
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="Barra"
-                    stroke={COLOR_BARRA}
-                    strokeWidth={2}
-                    dot={false}
-                    activeDot={{ r: 4, fill: COLOR_BARRA, strokeWidth: 0 }}
-                    connectNulls
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-slate-400 text-xs py-16 text-center">Sin datos</p>
-            )}
-          </div>
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+          <span className="text-xs text-slate-500">Media cocina hoy</span>
+          <span className="text-sm font-bold text-slate-800">
+            {hoyCocina.length ? formatTiempo(mean(hoyCocina.map((t) => t.tiempo_segundos))) : '—'}
+          </span>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+          <span className="text-xs text-slate-500">Media barra hoy</span>
+          <span className="text-sm font-bold text-slate-800">
+            {hoyBarra.length ? formatTiempo(mean(hoyBarra.map((t) => t.tiempo_segundos))) : '—'}
+          </span>
+        </div>
+      </div>
 
-          {/* Tiempo medio por día de la semana */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
-            <h2 className="text-sm font-semibold text-slate-800 mb-4">
-              Tiempo medio por día de la semana
-            </h2>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={weekData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis
-                  dataKey="dia"
-                  tick={{ fontSize: 11, fill: '#94a3b8' }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  tick={{ fontSize: 11, fill: '#94a3b8' }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(v: number) => formatTiempo(v)}
-                  width={52}
-                />
-                <Tooltip content={<TimeTooltip />} />
-                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                <Bar dataKey="Cocina" fill={COLOR_COCINA} radius={[3, 3, 0, 0]} maxBarSize={24} />
-                <Bar dataKey="Barra" fill={COLOR_BARRA} radius={[3, 3, 0, 0]} maxBarSize={24} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+      {/* Tiempo medio por hora del día */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
+        <h2 className="text-sm font-semibold text-slate-800 mb-1">
+          Tiempo medio por hora del día
+        </h2>
+        <p className="text-xs text-slate-400 mb-4">Detecta colapsos de cocina por franja horaria</p>
+        {hourData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={220}>
+            <LineChart data={hourData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+              <XAxis
+                dataKey="hora"
+                tick={{ fontSize: 11, fill: '#94a3b8' }}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                tick={{ fontSize: 11, fill: '#94a3b8' }}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(v: number) => formatTiempo(v)}
+                width={52}
+              />
+              <Tooltip content={<TimeTooltip />} />
+              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+              <Line
+                type="monotone"
+                dataKey="Cocina"
+                stroke={COLOR_COCINA}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, fill: COLOR_COCINA, strokeWidth: 0 }}
+                connectNulls
+              />
+              <Line
+                type="monotone"
+                dataKey="Barra"
+                stroke={COLOR_BARRA}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4, fill: COLOR_BARRA, strokeWidth: 0 }}
+                connectNulls
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="text-slate-300 text-xs py-16 text-center">Sin registros en el período</p>
+        )}
+      </div>
 
-          {/* Top 10 pedidos más lentos */}
-          {top10Lentos.length > 0 && (
-            <div className="bg-white border border-slate-200 rounded-xl p-5">
-              <h2 className="text-sm font-semibold text-slate-800 mb-1">
-                10 pedidos más lentos
-              </h2>
-              <p className="text-xs text-slate-400 mb-4">Período seleccionado</p>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-100">
-                      <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4 w-6">#</th>
-                      <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pedido</th>
-                      <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Empresa / Cliente</th>
-                      <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pantalla</th>
-                      <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Productos</th>
-                      <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Fecha</th>
-                      <th className="text-right text-xs text-slate-500 font-medium pb-2">Tiempo</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {top10Lentos.map((t, i) => (
-                      <tr
-                        key={t.id}
-                        className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
-                      >
-                        <td className="py-2.5 pr-4 text-xs text-slate-400">{i + 1}</td>
-                        <td className="py-2.5 pr-4 text-xs text-slate-500">#{t.pedido_id}</td>
-                        <td className="py-2.5 pr-4 text-xs text-slate-800 font-medium">
-                          {t.pedidos?.empresa ?? t.pedidos?.nombre ?? '—'}
-                        </td>
-                        <td className="py-2.5 pr-4">
-                          <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                            t.pantalla === 'cocina'
-                              ? 'bg-slate-100 text-slate-700'
-                              : 'bg-blue-50 text-blue-700'
-                          }`}>
-                            {t.pantalla}
-                          </span>
-                        </td>
-                        <td className="py-2.5 pr-4 text-xs text-slate-500 max-w-xs truncate">
-                          {productosByPedido.get(t.pedido_id) ?? '—'}
-                        </td>
-                        <td className="py-2.5 pr-4 text-xs text-slate-400 whitespace-nowrap">
-                          {new Date(t.iniciado_at).toLocaleDateString('es-ES', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </td>
-                        <td className="py-2.5 text-right">
-                          <span className={`text-xs font-bold ${
-                            t.tiempo_segundos > 900
-                              ? 'text-red-500'
-                              : t.tiempo_segundos > 600
-                              ? 'text-amber-500'
-                              : 'text-slate-700'
-                          }`}>
-                            {formatTiempo(t.tiempo_segundos)}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </>
-      )}
+      {/* Tiempo medio por día de la semana */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
+        <h2 className="text-sm font-semibold text-slate-800 mb-4">
+          Tiempo medio por día de la semana
+        </h2>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={weekData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <XAxis
+              dataKey="dia"
+              tick={{ fontSize: 11, fill: '#94a3b8' }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              tick={{ fontSize: 11, fill: '#94a3b8' }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v: number) => formatTiempo(v)}
+              width={52}
+            />
+            <Tooltip content={<TimeTooltip />} />
+            <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+            <Bar dataKey="Cocina" fill={COLOR_COCINA} radius={[3, 3, 0, 0]} maxBarSize={24} />
+            <Bar dataKey="Barra" fill={COLOR_BARRA} radius={[3, 3, 0, 0]} maxBarSize={24} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Top 10 pedidos más lentos */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-slate-800 mb-1">
+          10 pedidos más lentos
+        </h2>
+        <p className="text-xs text-slate-400 mb-4">Período seleccionado</p>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-slate-100">
+                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4 w-6">#</th>
+                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pedido</th>
+                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Empresa / Cliente</th>
+                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pantalla</th>
+                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Productos</th>
+                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Fecha</th>
+                <th className="text-right text-xs text-slate-500 font-medium pb-2">Tiempo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {top10Lentos.length > 0 ? top10Lentos.map((t, i) => (
+                <tr
+                  key={t.id}
+                  className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                >
+                  <td className="py-2.5 pr-4 text-xs text-slate-400">{i + 1}</td>
+                  <td className="py-2.5 pr-4 text-xs text-slate-500">#{t.pedido_id}</td>
+                  <td className="py-2.5 pr-4 text-xs text-slate-800 font-medium">
+                    {t.pedidos?.empresa ?? t.pedidos?.nombre ?? '—'}
+                  </td>
+                  <td className="py-2.5 pr-4">
+                    <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                      t.pantalla === 'cocina'
+                        ? 'bg-slate-100 text-slate-700'
+                        : 'bg-blue-50 text-blue-700'
+                    }`}>
+                      {t.pantalla}
+                    </span>
+                  </td>
+                  <td className="py-2.5 pr-4 text-xs text-slate-500 max-w-xs truncate">
+                    {productosByPedido.get(t.pedido_id) ?? '—'}
+                  </td>
+                  <td className="py-2.5 pr-4 text-xs text-slate-400 whitespace-nowrap">
+                    {new Date(t.iniciado_at).toLocaleDateString('es-ES', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </td>
+                  <td className="py-2.5 text-right">
+                    <span className={`text-xs font-bold ${
+                      t.tiempo_segundos > 900
+                        ? 'text-red-500'
+                        : t.tiempo_segundos > 600
+                        ? 'text-amber-500'
+                        : 'text-slate-700'
+                    }`}>
+                      {formatTiempo(t.tiempo_segundos)}
+                    </span>
+                  </td>
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-xs text-slate-300">
+                    Sin registros en el período
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
