@@ -120,18 +120,18 @@ function SyncAgora() {
           disabled={status === 'loading'}
           className="shrink-0 bg-slate-900 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 disabled:opacity-50 whitespace-nowrap"
         >
-          {status === 'loading' ? 'Sincronizando...' : '🔄 Sincronizar ahora'}
+          {status === 'loading' ? 'Sincronizando...' : 'Sincronizar ahora'}
         </button>
       </div>
 
       {status === 'ok' && result && (
         <div className="mt-3 bg-green-50 border border-green-200 rounded-lg px-4 py-2 text-sm text-green-700">
-          ✅ Sincronizado — {result.updated} productos actualizados
+          Sincronizado — {result.updated} productos actualizados
         </div>
       )}
       {status === 'error' && (
         <div className="mt-3 bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-sm text-red-700">
-          ❌ Error al conectar con el TPV. ¿Está encendido el local?
+          Error al conectar con el TPV. ¿Está encendido el local?
         </div>
       )}
     </div>
@@ -247,7 +247,7 @@ export default function ImportarCarta() {
             : 'border-slate-300 bg-white hover:border-slate-400 hover:bg-slate-50'
         }`}
       >
-        <div className="text-3xl mb-3">📂</div>
+        <div className="text-3xl mb-3">+</div>
         <p className="text-slate-700 font-medium text-sm">
           {dragging ? 'Suelta el archivo aquí' : 'Arrastra el XLS aquí o haz clic para elegirlo'}
         </p>
@@ -361,7 +361,7 @@ export default function ImportarCarta() {
       {done && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-5 max-w-lg">
           <p className="text-green-700 font-semibold">
-            ✓ {aActualizar.length} precios actualizados correctamente en Supabase
+            {aActualizar.length} precios actualizados correctamente en Supabase
           </p>
           <button
             onClick={() => { setResultados(null); setDone(false); if (fileRef.current) fileRef.current.value = '' }}

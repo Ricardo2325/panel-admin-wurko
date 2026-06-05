@@ -296,7 +296,7 @@ export default function Empresas() {
                   <span className="text-xs font-mono text-slate-500">Token: {emp.token_acceso}</span>
                   <span className="text-xs text-slate-400">·</span>
                   <span className="text-xs text-slate-500">
-                    {emp.envio_gratis ? '🚚 Envío gratis' : `🚚 ${emp.coste_envio.toFixed(2)}€`}
+                    {emp.envio_gratis ? 'Envío gratis' : `Envío: ${emp.coste_envio.toFixed(2)}€`}
                   </span>
                 </div>
               </div>
