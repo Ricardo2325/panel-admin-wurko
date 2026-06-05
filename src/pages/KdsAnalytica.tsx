@@ -189,8 +189,6 @@ export default function KdsAnalytica() {
     )
   }
 
-  const sinDatos = tiempos.length === 0
-
   return (
     <div>
       {/* Header */}
