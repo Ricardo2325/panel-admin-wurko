@@ -18,6 +18,7 @@ const allNavItems: NavItem[] = [
   { to: '/dashboard/pedidos', label: 'Pedidos' },
   { to: '/dashboard/importar', label: 'Importar carta XLS' },
   { to: '/dashboard/kds', label: 'Analítica KDS' },
+  { to: '/dashboard/empresas', label: 'Empresas' },
 ]
 
 const navByRole: Record<UserRole, NavItem[]> = {
@@ -28,6 +29,7 @@ const navByRole: Record<UserRole, NavItem[]> = {
     { to: '/dashboard/carta', label: 'Carta de productos' },
     { to: '/dashboard/importar', label: 'Importar carta XLS' },
     { to: '/dashboard/kds', label: 'Analítica KDS' },
+    { to: '/dashboard/empresas', label: 'Empresas' },
   ],
   staff: [
     { to: '/dashboard/pedidos', label: 'Pedidos' },

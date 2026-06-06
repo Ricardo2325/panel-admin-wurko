@@ -44,15 +44,28 @@ export interface NumeroAdmin {
 
 export interface Pedido {
   id: number
-  nombre: string | null
-  telefono: string | null
+  codigo_pedido: string | null
+  cliente_nombre: string | null
+  cliente_telefono: string | null
   empresa: string | null
-  direccion: string | null
-  zona: string | null
-  hora_entrega: string | null
-  forma_pago: string | null
-  total: number | null
+  empresa_id: string | null
+  hora_deseada: string | null
+  notas: string | null
   estado: string | null
+  canal: string | null
+  total: number | null
+  coste_envio: number | null
+  created_at: string
+}
+
+export interface Empresa {
+  id: string
+  nombre: string
+  token_acceso: string
+  envio_gratis: boolean
+  coste_envio: number
+  activa: boolean
+  mostrar_nombre: boolean | null
   created_at: string
 }
 
@@ -72,7 +85,9 @@ export interface ProductoPedido {
   nombre: string
   cantidad: number
   precio_unitario: number | null
+  subtotal: number | null
   modificaciones: string | null
+  created_at: string
 }
 
 // Supabase GenericSchema requiere Tables, Views, Functions, Enums, CompositeTypes
