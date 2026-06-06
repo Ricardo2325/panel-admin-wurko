@@ -16,7 +16,6 @@ const AdminsNumeros = lazy(() => import('./pages/AdminsNumeros'))
 const Pedidos = lazy(() => import('./pages/Pedidos'))
 const ImportarCarta = lazy(() => import('./pages/ImportarCarta'))
 const KdsAnalytica = lazy(() => import('./pages/KdsAnalytica'))
-const Empresas = lazy(() => import('./pages/Empresas'))
 
 function DashboardIndex() {
   const { role } = useAuth()
@@ -62,7 +61,6 @@ export default function App() {
             <Route path="pedidos" element={<Suspense fallback={<PageLoader />}><Pedidos /></Suspense>} />
             <Route path="importar" element={<Suspense fallback={<PageLoader />}><ImportarCarta /></Suspense>} />
             <Route path="kds" element={<Suspense fallback={<PageLoader />}><KdsAnalytica /></Suspense>} />
-            <Route path="empresas" element={<Suspense fallback={<PageLoader />}><Empresas /></Suspense>} />
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
