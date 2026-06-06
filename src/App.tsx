@@ -5,8 +5,10 @@ import AuthGuard from './components/AuthGuard'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import { useAuth } from './hooks/useAuth'
 
 const Carta = lazy(() => import('./pages/Carta'))
+const Empresas = lazy(() => import('./pages/Empresas'))
 const MenuDia = lazy(() => import('./pages/MenuDia'))
 const Agotados = lazy(() => import('./pages/Agotados'))
 const Bloqueados = lazy(() => import('./pages/Bloqueados'))
@@ -15,6 +17,12 @@ const Pedidos = lazy(() => import('./pages/Pedidos'))
 const ImportarCarta = lazy(() => import('./pages/ImportarCarta'))
 const KdsAnalytica = lazy(() => import('./pages/KdsAnalytica'))
 const Empresas = lazy(() => import('./pages/Empresas'))
+
+function DashboardIndex() {
+  const { role } = useAuth()
+  if (role === 'staff') return <Navigate to="/dashboard/pedidos" replace />
+  return <Dashboard />
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,8 +52,9 @@ export default function App() {
               </AuthGuard>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route index element={<DashboardIndex />} />
             <Route path="carta" element={<Suspense fallback={<PageLoader />}><Carta /></Suspense>} />
+            <Route path="empresas" element={<Suspense fallback={<PageLoader />}><Empresas /></Suspense>} />
             <Route path="menu-dia" element={<Suspense fallback={<PageLoader />}><MenuDia /></Suspense>} />
             <Route path="agotados" element={<Suspense fallback={<PageLoader />}><Agotados /></Suspense>} />
             <Route path="bloqueados" element={<Suspense fallback={<PageLoader />}><Bloqueados /></Suspense>} />

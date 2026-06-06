@@ -10,13 +10,14 @@ interface NavItem {
 
 const allNavItems: NavItem[] = [
   { to: '/dashboard', label: 'Inicio' },
+  { to: '/dashboard/empresas', label: 'Empresas' },
   { to: '/dashboard/carta', label: 'Carta de productos' },
   { to: '/dashboard/menu-dia', label: 'Menú del día' },
   { to: '/dashboard/agotados', label: 'Productos agotados' },
   { to: '/dashboard/bloqueados', label: 'Números bloqueados' },
   { to: '/dashboard/admins', label: 'Números admin' },
   { to: '/dashboard/pedidos', label: 'Pedidos' },
-  { to: '/dashboard/importar', label: 'Importar carta XLS' },
+  { to: '/dashboard/importar', label: 'Importar carta' },
   { to: '/dashboard/kds', label: 'Analítica KDS' },
   { to: '/dashboard/empresas', label: 'Empresas' },
 ]
@@ -25,9 +26,10 @@ const navByRole: Record<UserRole, NavItem[]> = {
   dev: allNavItems,
   jefe: [
     { to: '/dashboard', label: 'Inicio' },
+    { to: '/dashboard/empresas', label: 'Empresas' },
     { to: '/dashboard/pedidos', label: 'Pedidos' },
     { to: '/dashboard/carta', label: 'Carta de productos' },
-    { to: '/dashboard/importar', label: 'Importar carta XLS' },
+    { to: '/dashboard/importar', label: 'Importar carta' },
     { to: '/dashboard/kds', label: 'Analítica KDS' },
     { to: '/dashboard/empresas', label: 'Empresas' },
   ],
@@ -107,7 +109,7 @@ export default function Layout() {
 
       {/* Main */}
       <main className="flex-1 overflow-y-auto">
-        <div className="p-6 max-w-5xl">
+        <div className="p-6">
           <Outlet />
         </div>
       </main>

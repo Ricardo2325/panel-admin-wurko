@@ -73,6 +73,71 @@ function normalizar(s: string) {
   return s.toLowerCase().trim().replace(/\s+/g, ' ')
 }
 
+// ── Sync desde Ágora ──────────────────────────────────────────────────────────
+
+const N8N_SYNC_WEBHOOK = 'https://wurko.baifostudio.com/webhook/sync-carta'
+
+type SyncStatus = 'idle' | 'loading' | 'ok' | 'error'
+
+function SyncAgora() {
+  const [status,    setStatus]    = useState<SyncStatus>('idle')
+  const [lastSync,  setLastSync]  = useState<string | null>(
+    () => localStorage.getItem('wurko_last_sync')
+  )
+  const [result, setResult] = useState<{ updated: number } | null>(null)
+
+  async function handleSync() {
+    setStatus('loading')
+    setResult(null)
+    try {
+      const res = await fetch(N8N_SYNC_WEBHOOK, { method: 'POST' })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setResult({ updated: data.updated ?? 0 })
+      const ts = new Date().toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+      setLastSync(ts)
+      localStorage.setItem('wurko_last_sync', ts)
+      setStatus('ok')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  return (
+    <div className="bg-white border border-slate-200 rounded-xl p-5 max-w-lg">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-base font-semibold text-slate-900">Sync desde Ágora TPV</h2>
+          <p className="text-sm text-slate-500 mt-0.5">
+            Actualiza nombres y precios automáticamente desde el TPV del local.
+          </p>
+          {lastSync && (
+            <p className="text-xs text-slate-400 mt-2">Última sync: {lastSync}</p>
+          )}
+        </div>
+        <button
+          onClick={handleSync}
+          disabled={status === 'loading'}
+          className="shrink-0 bg-slate-900 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 disabled:opacity-50 whitespace-nowrap"
+        >
+          {status === 'loading' ? 'Sincronizando...' : 'Sincronizar ahora'}
+        </button>
+      </div>
+
+      {status === 'ok' && result && (
+        <div className="mt-3 bg-green-50 border border-green-200 rounded-lg px-4 py-2 text-sm text-green-700">
+          Sincronizado — {result.updated} productos actualizados
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="mt-3 bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-sm text-red-700">
+          Error al conectar con el TPV. ¿Está encendido el local?
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function ImportarCarta() {
   const fileRef = useRef<HTMLInputElement>(null)
   const [resultados, setResultados] = useState<ResultadoMatch[] | null>(null)
@@ -155,7 +220,17 @@ export default function ImportarCarta() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Importar carta desde XLS</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-1">Importar carta</h1>
+      <p className="text-slate-500 text-sm mb-6">
+        Sincroniza precios desde el TPV o importa manualmente desde un Excel.
+      </p>
+
+      {/* ── Sync desde Ágora ── */}
+      <SyncAgora />
+
+      <div className="my-8 border-t border-slate-200" />
+
+      <h2 className="text-lg font-semibold text-slate-800 mb-1">Importar desde Excel</h2>
       <p className="text-slate-500 text-sm mb-6">
         Subí el export de tu panel de casa. Se actualizan solo los productos que ya existen en Supabase, usando el precio PVP1.
       </p>
@@ -172,7 +247,7 @@ export default function ImportarCarta() {
             : 'border-slate-300 bg-white hover:border-slate-400 hover:bg-slate-50'
         }`}
       >
-        <div className="text-3xl mb-3">📂</div>
+        <div className="text-3xl mb-3">+</div>
         <p className="text-slate-700 font-medium text-sm">
           {dragging ? 'Suelta el archivo aquí' : 'Arrastra el XLS aquí o haz clic para elegirlo'}
         </p>
@@ -286,7 +361,7 @@ export default function ImportarCarta() {
       {done && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-5 max-w-lg">
           <p className="text-green-700 font-semibold">
-            ✓ {aActualizar.length} precios actualizados correctamente en Supabase
+            {aActualizar.length} precios actualizados correctamente en Supabase
           </p>
           <button
             onClick={() => { setResultados(null); setDone(false); if (fileRef.current) fileRef.current.value = '' }}

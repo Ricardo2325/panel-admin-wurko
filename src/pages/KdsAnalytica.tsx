@@ -243,34 +243,40 @@ export default function KdsAnalytica() {
       </div>
 
       {/* Mini-stats: más rápido / más lento hoy */}
-      <div className="flex gap-3 mb-6">
-        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-          <span className="text-xs text-slate-500">Más rápido hoy</span>
-          <span className="text-sm font-bold text-emerald-600">
-            {masRapidoHoy !== null ? formatTiempo(masRapidoHoy) : '—'}
-          </span>
+      {hoy.length > 0 && (
+        <div className="flex gap-3 mb-6">
+          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+            <span className="text-xs text-slate-500">Más rápido hoy</span>
+            <span className="text-sm font-bold text-emerald-600">
+              {masRapidoHoy !== null ? formatTiempo(masRapidoHoy) : '—'}
+            </span>
+          </div>
+          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+            <span className="text-xs text-slate-500">Más lento hoy</span>
+            <span className={`text-sm font-bold ${
+              masLentoHoy !== null && masLentoHoy > 900 ? 'text-red-500' : 'text-slate-800'
+            }`}>
+              {masLentoHoy !== null ? formatTiempo(masLentoHoy) : '—'}
+            </span>
+          </div>
+          {hoyCocina.length > 0 && (
+            <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+              <span className="text-xs text-slate-500">Media cocina hoy</span>
+              <span className="text-sm font-bold text-slate-800">
+                {formatTiempo(mean(hoyCocina.map((t) => t.tiempo_segundos)))}
+              </span>
+            </div>
+          )}
+          {hoyBarra.length > 0 && (
+            <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
+              <span className="text-xs text-slate-500">Media barra hoy</span>
+              <span className="text-sm font-bold text-slate-800">
+                {formatTiempo(mean(hoyBarra.map((t) => t.tiempo_segundos)))}
+              </span>
+            </div>
+          )}
         </div>
-        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-          <span className="text-xs text-slate-500">Más lento hoy</span>
-          <span className={`text-sm font-bold ${
-            masLentoHoy !== null && masLentoHoy > 900 ? 'text-red-500' : 'text-slate-800'
-          }`}>
-            {masLentoHoy !== null ? formatTiempo(masLentoHoy) : '—'}
-          </span>
-        </div>
-        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-          <span className="text-xs text-slate-500">Media cocina hoy</span>
-          <span className="text-sm font-bold text-slate-800">
-            {hoyCocina.length ? formatTiempo(mean(hoyCocina.map((t) => t.tiempo_segundos))) : '—'}
-          </span>
-        </div>
-        <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-3">
-          <span className="text-xs text-slate-500">Media barra hoy</span>
-          <span className="text-sm font-bold text-slate-800">
-            {hoyBarra.length ? formatTiempo(mean(hoyBarra.map((t) => t.tiempo_segundos))) : '—'}
-          </span>
-        </div>
-      </div>
+      )}
 
       {/* Tiempo medio por hora del día */}
       <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6">
@@ -318,7 +324,7 @@ export default function KdsAnalytica() {
             </LineChart>
           </ResponsiveContainer>
         ) : (
-          <p className="text-slate-300 text-xs py-16 text-center">Sin registros en el período</p>
+          <p className="text-slate-400 text-xs py-16 text-center">Sin datos para el período seleccionado</p>
         )}
       </div>
 
@@ -352,78 +358,74 @@ export default function KdsAnalytica() {
       </div>
 
       {/* Top 10 pedidos más lentos */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-slate-800 mb-1">
-          10 pedidos más lentos
-        </h2>
-        <p className="text-xs text-slate-400 mb-4">Período seleccionado</p>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-100">
-                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4 w-6">#</th>
-                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pedido</th>
-                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Empresa / Cliente</th>
-                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pantalla</th>
-                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Productos</th>
-                <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Fecha</th>
-                <th className="text-right text-xs text-slate-500 font-medium pb-2">Tiempo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {top10Lentos.length > 0 ? top10Lentos.map((t, i) => (
-                <tr
-                  key={t.id}
-                  className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
-                >
-                  <td className="py-2.5 pr-4 text-xs text-slate-400">{i + 1}</td>
-                  <td className="py-2.5 pr-4 text-xs text-slate-500">#{t.pedido_id}</td>
-                  <td className="py-2.5 pr-4 text-xs text-slate-800 font-medium">
-                    {t.pedidos?.empresa ?? t.pedidos?.nombre ?? '—'}
-                  </td>
-                  <td className="py-2.5 pr-4">
-                    <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      t.pantalla === 'cocina'
-                        ? 'bg-slate-100 text-slate-700'
-                        : 'bg-blue-50 text-blue-700'
-                    }`}>
-                      {t.pantalla}
-                    </span>
-                  </td>
-                  <td className="py-2.5 pr-4 text-xs text-slate-500 max-w-xs truncate">
-                    {productosByPedido.get(t.pedido_id) ?? '—'}
-                  </td>
-                  <td className="py-2.5 pr-4 text-xs text-slate-400 whitespace-nowrap">
-                    {new Date(t.iniciado_at).toLocaleDateString('es-ES', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </td>
-                  <td className="py-2.5 text-right">
-                    <span className={`text-xs font-bold ${
-                      t.tiempo_segundos > 900
-                        ? 'text-red-500'
-                        : t.tiempo_segundos > 600
-                        ? 'text-amber-500'
-                        : 'text-slate-700'
-                    }`}>
-                      {formatTiempo(t.tiempo_segundos)}
-                    </span>
-                  </td>
+      {top10Lentos.length > 0 && (
+        <div className="bg-white border border-slate-200 rounded-xl p-5">
+          <h2 className="text-sm font-semibold text-slate-800 mb-1">
+            10 pedidos más lentos
+          </h2>
+          <p className="text-xs text-slate-400 mb-4">Período seleccionado</p>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4 w-6">#</th>
+                  <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pedido</th>
+                  <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Empresa / Cliente</th>
+                  <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Pantalla</th>
+                  <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Productos</th>
+                  <th className="text-left text-xs text-slate-500 font-medium pb-2 pr-4">Fecha</th>
+                  <th className="text-right text-xs text-slate-500 font-medium pb-2">Tiempo</th>
                 </tr>
-              )) : (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-xs text-slate-300">
-                    Sin registros en el período
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {top10Lentos.map((t, i) => (
+                  <tr
+                    key={t.id}
+                    className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
+                  >
+                    <td className="py-2.5 pr-4 text-xs text-slate-400">{i + 1}</td>
+                    <td className="py-2.5 pr-4 text-xs text-slate-500">#{t.pedido_id}</td>
+                    <td className="py-2.5 pr-4 text-xs text-slate-800 font-medium">
+                      {t.pedidos?.empresa ?? t.pedidos?.nombre ?? '—'}
+                    </td>
+                    <td className="py-2.5 pr-4">
+                      <span className={`inline-block text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                        t.pantalla === 'cocina'
+                          ? 'bg-slate-100 text-slate-700'
+                          : 'bg-blue-50 text-blue-700'
+                      }`}>
+                        {t.pantalla}
+                      </span>
+                    </td>
+                    <td className="py-2.5 pr-4 text-xs text-slate-500 max-w-xs truncate">
+                      {productosByPedido.get(t.pedido_id) ?? '—'}
+                    </td>
+                    <td className="py-2.5 pr-4 text-xs text-slate-400 whitespace-nowrap">
+                      {new Date(t.iniciado_at).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </td>
+                    <td className="py-2.5 text-right">
+                      <span className={`text-xs font-bold ${
+                        t.tiempo_segundos > 900
+                          ? 'text-red-500'
+                          : t.tiempo_segundos > 600
+                          ? 'text-amber-500'
+                          : 'text-slate-700'
+                      }`}>
+                        {formatTiempo(t.tiempo_segundos)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

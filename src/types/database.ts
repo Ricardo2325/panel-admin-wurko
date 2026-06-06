@@ -1,3 +1,14 @@
+export interface Empresa {
+  id: string
+  nombre: string
+  token_acceso: string
+  envio_gratis: boolean
+  coste_envio: number
+  activa: boolean
+  mostrar_nombre: boolean | null
+  created_at: string
+}
+
 export type ProductoCategoria =
   | 'Bocadillos' | 'Pulgas' | 'Sandwiches' | 'Croissants'
   | 'Hamburguesas y Perritos' | 'Arepas' | 'Papas Locas' | 'Tapas'
@@ -43,7 +54,7 @@ export interface NumeroAdmin {
 }
 
 export interface Pedido {
-  id: number
+  id: string
   codigo_pedido: string | null
   cliente_nombre: string | null
   cliente_telefono: string | null
@@ -55,17 +66,14 @@ export interface Pedido {
   canal: string | null
   total: number | null
   coste_envio: number | null
-  created_at: string
-}
-
-export interface Empresa {
-  id: string
-  nombre: string
-  token_acceso: string
-  envio_gratis: boolean
-  coste_envio: number
-  activa: boolean
-  mostrar_nombre: boolean | null
+  numero_whatsapp: string | null
+  forma_pago: string | null
+  updated_at: string | null
+  nombre: string | null
+  telefono: string | null
+  direccion: string | null
+  zona: string | null
+  hora_entrega: string | null
   created_at: string
 }
 

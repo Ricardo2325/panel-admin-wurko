@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import type { MenuDia as MenuDiaType } from '../types/database'
 
-const CURSOS = ['Primero', 'Segundo', 'Postre'] as const
+const CURSOS = ['Primero', 'Segundo', 'Postre', 'Pulguita_especial'] as const
 type Curso = typeof CURSOS[number]
-const MENU_TIPOS = ['Primero', 'Segundo', 'Postre']
+const MENU_TIPOS = ['Primero', 'Segundo', 'Postre', 'Pulguita_especial']
 const SEP = ' | '
 
 async function fetchMenu(): Promise<MenuDiaType[]> {
@@ -29,6 +29,7 @@ export default function MenuDia() {
     Primero: [''],
     Segundo: [''],
     Postre: [''],
+    Pulguita_especial: [''],
   })
   const [saved, setSaved] = useState(false)
   const queryClient = useQueryClient()
